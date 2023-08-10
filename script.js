@@ -1,10 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
     const firebaseConfig = {
         apiKey: "YOUR_API_KEY",
-        authDomain: "YOUR_AUTH_DOMAIN",
+        authDomain: "https://useraatbrad.github.io/Website/",
         projectId: "fir-1e8f9",
         storageBucket: "YOUR_STORAGE_BUCKET",
-        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+        messagingSenderId: "270141021841",
         appId: "1:270141021841:web:946aedbbf8f258533f6930"
     };
     firebase.initializeApp(firebaseConfig);

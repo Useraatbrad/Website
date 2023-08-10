@@ -1,38 +1,257 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+@font-face {
+    font-family: 'Mona Sans Header';
+    src:
+        url('./assets/font-header.woff2') format('woff2 supports variations'),
+        url('./assets/font-header.woff2') format('woff2-variations');
+    font-weight: 200 900;
+    font-stretch: 75% 125%;
+}
+
+@font-face {
+    font-family: 'Mona Sans Regular';
+    src:
+        url('./assets/font-regular.woff2') format('woff2 supports variations'),
+        url('./assets/font-regular.woff2') format('woff2-variations');
+    font-weight: 200 900;
+    font-stretch: 75% 125%;
+}
+
+:root {
+    --theme: #5865F2;
+    --success: #5cb85c;
+    --error: #d9534f;
+}
+
+[data-color-scheme="dark"] {
+    --background: #101010;
+    --background-two: #0d0d0d;
+    --background-three: #0f0f0f;
+    --foreground: #f5f6f7;
+
+    --yellow: #F4E465;
+    --green: #86BB75;
+    --blue: #71A7CB;
+    --white: #ffffff;
+    color-scheme: dark;
+}
+
+[data-color-scheme="dark"] .github-corner svg {
+    fill: #0a0a0a;
+    color: #f5f6f7;
+}
+
+[data-color-scheme="light"] {
+    --background: #f2f2f2;
+    --background-two: #c2c2c2;
+    --background-three: #e6e6e6;
+    --foreground: #000000;
+
+    --yellow: #9c9241;
+    --green: #56784b;
+    --blue: #5a86a2;
+    --white: #000000;
+    color-scheme: light;
+}
+
+[data-color-scheme="light"] .github-corner svg {
+    fill: #afafaf;
+    color: #000000;
+}
+
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    color-scheme: inherit;
 }
 
-.container {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+body {
+    width: 100%;
+    min-height: 100vh;
+    max-height: 100vh;
+    font-family: 'Mona Sans Regular', sans-serif;
+    color: var(--foreground);
+    background-color: var(--background);
+    overflow-y: scroll;
 }
 
-.form {
+a {
+    color: var(--foreground);
+}
+
+img {
+    user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+}
+
+grammarly-extension,
+grammarly-desktop-integration,
+grammarly-underline,
+grammarly-dictionary-card,
+grammarly-popups {
+    display: none;
+}
+
+footer {
+    position: fixed;
+    bottom: 1%;
+    right: 1%;
+    border: 0;
+}
+
+.body {
+    height: 100vh;
     display: flex;
-    flex-direction: column;
-    margin-top: 20px;
+    flex-flow: column;
 }
 
-input {
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
+.header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    background-color: var(--background-two);
+    padding: 2.5vh 12.5vw;
+    flex: 0 1 auto;
 }
 
-button {
-    padding: 8px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 3px;
+.header-logo {
+    font-size: min(10vw, 24px);
+    font-weight: 900;
+    font-stretch: 75%;
+    font-family: 'Mona Sans Header';
+    text-transform: uppercase;
+}
+
+.header-logo-yellow {
+    display: inline;
+    outline: 0;
+    color: var(--yellow);
+}
+
+.header-logo-green {
+    display: inline;
+    outline: 0;
+    color: var(--green);
+}
+
+.header-logo-blue {
+    display: inline;
+    outline: 0;
+    color: var(--blue);
+}
+
+.header-logo-white {
+    display: inline;
+    outline: 0;
+    color: var(--white);
+    text-transform: lowercase;
+}
+
+.header a {
+    margin-left: 1em;
+    font-size: min(10vw, 24px);
+    font-weight: 900;
+    font-stretch: 75%;
+    font-family: 'Mona Sans Header';
+    text-decoration: none;
     cursor: pointer;
+}
+
+.header a:hover {
+    text-decoration: underline;
+}
+
+.main {
+    padding: 2.5vh 12.5vw;
+    flex: 1 1 auto;
+}
+
+.main-vpns {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin: 0 0 5% 0;
+}
+
+.main-links {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 0 0 5% 0;
+}
+
+.main-games {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    margin: 0 0 5% 0;
+}
+
+.main-item {
+    background-color: var(--background-two);
+    box-shadow: 0 0 10px var(--foreground);
+    padding: 20px;
+    border-radius: 10px;
+    margin: 5% 7.5% 5% 0;
+}
+
+.main-item.game {
+    padding: 0;
+    margin: 5% 5% 5% 0;
+}
+
+.main-item.game h2 {
+    padding: 20px;
+}
+
+.main-item.game img {
+    width: 100%;
+    border-radius: 10px; 
+}
+
+.error {
+    display: none;
+    font-size: 2em;
+    margin: 1em;
+}
+
+@media only screen and (max-width: 1440px) {
+    .main-games {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+@media only screen and (max-width: 1020px) {
+    .error {
+        display: block;
+    }
+
+    .body {
+        display: none !important;
+    }
+}
+
+.github-corner:hover .octo-arm {
+    animation: octocat-wave 560ms ease-in-out
+}
+
+.github-corner svg {
+    height: calc(27.987px + (2.5vh * 2));
+}
+
+@keyframes octocat-wave {
+
+    0%,
+    100% {
+        transform: rotate(0)
+    }
+
+    20%,
+    60% {
+        transform: rotate(-25deg)
+    }
+
+    40%,
+    80% {
+        transform: rotate(10deg)
+    }
 }

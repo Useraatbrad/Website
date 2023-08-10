@@ -1,11 +1,11 @@
 document.addEventListener("DOMContentLoaded", function () {
     const firebaseConfig = {
-        apiKey: "YOUR_API_KEY",
-        authDomain: "https://useraatbrad.github.io/Website/",
-        projectId: "fir-1e8f9",
-        storageBucket: "YOUR_STORAGE_BUCKET",
-        messagingSenderId: "270141021841",
-        appId: "1:270141021841:web:946aedbbf8f258533f6930"
+      apiKey: "AIzaSyB5suKK2tX_IhLsewYJaPm0lNqbKNcw3ew",
+      authDomain: "noidas-94ef7.firebaseapp.com",
+      projectId: "noidas-94ef7",
+      storageBucket: "noidas-94ef7.appspot.com",
+      messagingSenderId: "545818177015",
+      appId: "1:545818177015:web:183ad2a60f9873c03312f2"
     };
     firebase.initializeApp(firebaseConfig);
 

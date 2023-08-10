@@ -1,61 +1,85 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const chatContainer = document.getElementById("chat-container");
-    const messagesDiv = document.getElementById("messages");
-    const messageInput = document.getElementById("message-input");
-    const sendButton = document.getElementById("send-button");
-    const dmButton = document.getElementById("dm-button");
+    const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_AUTH_DOMAIN",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_STORAGE_BUCKET",
+        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+        appId: "YOUR_APP_ID"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    const loginForm = document.getElementById("login-form");
+    const signupForm = document.getElementById("signup-form");
 
     let currentUser = null;
-    let selectedUser = null;
 
-    firebase.auth().onAuthStateChanged(function(user) {
-        if (user) {
-            currentUser = user;
-            loadFriendRequests();
-            loadMessages();
-            // Load other user data and more initializations
-        } else {
-            window.location.href = "index.html";
+    loginForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        const email = document.getElementById("login-email").value;
+        const password = document.getElementById("login-password").value;
+        try {
+            await firebase.auth().signInWithEmailAndPassword(email, password);
+            currentUser = firebase.auth().currentUser;
+            redirectToChatApp();
+        } catch (error) {
+            console.error(error);
+            alert("Login failed. Please check your credentials.");
         }
     });
 
+    signupForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        const email = document.getElementById("signup-email").value;
+        const password = document.getElementById("signup-password").value;
+        try {
+            await firebase.auth().createUserWithEmailAndPassword(email, password);
+            currentUser = firebase.auth().currentUser;
+            redirectToChatApp();
+        } catch (error) {
+            console.error(error);
+            alert("Signup failed. Please check your input.");
+        }
+    });
+
+    function redirectToChatApp() {
+        window.location.href = "chat.html";
+    }
+
     // ...
 
-    async function loadFriendRequests() {
-        const userDoc = await firebase.firestore().collection("users").doc(currentUser.uid).get();
-        const friendRequestsReceived = userDoc.data().friendRequestsReceived || [];
+    document.getElementById("dm-button").addEventListener("click", function () {
+        const username = prompt("Enter the username of the user you want to DM:");
+        if (username) {
+            sendFriendRequest(username);
+        }
+    });
 
-        // Display received friend requests
-        // Implement UI to accept/reject friend requests
-    }
+    document.getElementById("send-button").addEventListener("click", function () {
+        const messageText = document.getElementById("message-input").value;
+        if (messageText.trim() !== "") {
+            sendMessage(selectedUser, messageText);
+            document.getElementById("message-input").value = "";
+        }
+    });
 
-    async function loadMessages() {
-        // Load and display messages from Firestore
-        // Implement real-time updates for new messages
-    }
+    async function sendFriendRequest(username) {
+        const usersCollection = firebase.firestore().collection("users");
+        const userSnapshot = await usersCollection.where("username", "==", username).get();
 
-    // ...
+        if (!userSnapshot.empty) {
+            const targetUserId = userSnapshot.docs[0].id;
 
-    async function acceptFriendRequest(requestUserId) {
-        await firebase.firestore().collection("users").doc(currentUser.uid).update({
-            friendRequestsReceived: firebase.firestore.FieldValue.arrayRemove(requestUserId),
-            friends: firebase.firestore.FieldValue.arrayUnion(requestUserId)
-        });
+            await usersCollection.doc(currentUser.uid).update({
+                friendRequestsSent: firebase.firestore.FieldValue.arrayUnion(targetUserId)
+            });
 
-        await firebase.firestore().collection("users").doc(requestUserId).update({
-            friendRequestsSent: firebase.firestore.FieldValue.arrayRemove(currentUser.uid),
-            friends: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
-        });
-    }
-
-    async function rejectFriendRequest(requestUserId) {
-        await firebase.firestore().collection("users").doc(currentUser.uid).update({
-            friendRequestsReceived: firebase.firestore.FieldValue.arrayRemove(requestUserId)
-        });
-
-        await firebase.firestore().collection("users").doc(requestUserId).update({
-            friendRequestsSent: firebase.firestore.FieldValue.arrayRemove(currentUser.uid)
-        });
+            await usersCollection.doc(targetUserId).update({
+                friendRequestsReceived: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
+            });
+        } else {
+            alert("User not found.");
+        }
     }
 
     async function sendMessage(recipientUserId, messageText) {
@@ -67,6 +91,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 text: messageText,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             });
+    }
+
+    function generateConversationId(userId1, userId2) {
+        const sortedUserIds = [userId1, userId2].sort();
+        return sortedUserIds.join("_");
     }
 
     // ...
